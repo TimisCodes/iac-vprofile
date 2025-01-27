@@ -1,0 +1,41 @@
+name: Terraform Test Workflow
+
+on:
+  pull_request:
+    paths:
+      - '**/*.tf' # Trigger on changes to any .tf file
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+    
+    steps:
+    # Checkout the code from the repository
+    - name: Checkout Code
+      uses: actions/checkout@v2
+
+    # Set up Terraform
+    - name: Set up Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: '1.5.0'  # Specify the Terraform version you want to use
+
+    # Initialize Terraform configuration
+    - name: Terraform Init
+      run: terraform init
+
+    # Validate Terraform configuration
+    - name: Terraform Validate
+      run: terraform validate
+
+    # Run Terraform fmt to ensure proper formatting (optional but recommended)
+    - name: Terraform Format Check
+      run: terraform fmt -check -diff
+
+    # Optional: Run Terraform plan to see changes (without applying)
+    - name: Terraform Plan
+      run: terraform plan
+
+    # Optional: Run Terraform Tests (if using `terraform` testing tools)
+    - name: Run Terraform Tests
+      run: terraform test
